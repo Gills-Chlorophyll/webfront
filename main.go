@@ -1,5 +1,60 @@
 package main
 
-func main() {
+import (
+	"net/http"
 
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+)
+
+type TypOfIndexPage uint8
+
+const (
+	Splash TypOfIndexPage = iota
+	AboutAquaponics
+	AboutJourney
+	AboutJoinus
+)
+
+func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		data := []MoreInfo{}
+		if typOfPage == AboutAquaponics {
+			data = DataAboutAquaponics
+		} else if typOfPage == AboutJourney {
+			data = DataAboutJourney
+		} else if typOfPage == AboutJoinus {
+			data = DataAboutJoinus
+		} else if typOfPage == Splash {
+			data = DataSplash
+		}
+		ctx.HTML(http.StatusOK, "index.html", gin.H{
+			"Title":     "Gills & Chlorophyll",
+			"TemplData": data,
+		})
+	}
+}
+
+func main() {
+	gin.SetMode(gin.DebugMode)
+	r := gin.Default()
+
+	// r.Static("/images", fmt.Sprintf("%s/images/", dirStatic))
+	// r.Static("/js", fmt.Sprintf("%s/js/", dirStatic))
+
+	r.LoadHTMLGlob("web/html/**/*")
+	r.Static("/templates", "web/templates/")
+	r.Static("/js", "web/js/")
+	r.Static("/images", "web/images/")
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"app": "aboutme",
+		})
+	})
+	r.GET("", HandleIndexPage(Splash))
+	r.GET("/about-aquaponics", HandleIndexPage(AboutAquaponics))
+	r.GET("/about-journey", HandleIndexPage(AboutJourney))
+	r.GET("/about-joinus", HandleIndexPage(AboutJoinus))
+	log.Fatal(r.Run(":8080"))
 }
