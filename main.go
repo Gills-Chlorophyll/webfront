@@ -35,6 +35,21 @@ func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
 	}
 }
 
+func HandleBlogPage(c *gin.Context) {
+	data, ok := DiaryData[c.Param("idx")]
+	if !ok {
+		c.HTML(http.StatusOK, "blog.html", gin.H{
+			"Title":    "Gills & Chlorophyll",
+			"BlogData": nil,
+		})
+		return
+	}
+	c.HTML(http.StatusOK, "blog.html", gin.H{
+		"Title":    "Gills & Chlorophyll",
+		"BlogData": data,
+	})
+}
+
 func main() {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
@@ -56,5 +71,6 @@ func main() {
 	r.GET("/about-aquaponics", HandleIndexPage(AboutAquaponics))
 	r.GET("/about-journey", HandleIndexPage(AboutJourney))
 	r.GET("/about-joinus", HandleIndexPage(AboutJoinus))
+	r.GET("/dear-diary/:idx", HandleBlogPage)
 	log.Fatal(r.Run(":8080"))
 }

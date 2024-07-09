@@ -1,0 +1,50 @@
+{{ define "partials/404-blog.html"}}
+<style>
+    .err-msg-img {
+        width: 75%;
+        height: auto;
+    }
+
+    .err-msg {
+        text-align: left;
+    }
+
+    @media (min-width: 768px) {
+        .err-msg-img {
+            width: 100%;
+            height: auto;
+        }
+
+        .err-msg {
+            text-align: left;
+        }
+    }
+</style>
+<div class="container mt-5 col-12 offset-md-2 col-md-8">
+    <div class="row col-12 col-md-4 my-5 offset-md-4 justify-content-center">
+        <img class="err-msg-img align-self-center img-fluid rounded-circle" src="/images/404.png"
+            alt="cariyon generated image">
+    </div>
+    <div class="container">
+        <h3 class="text-center text-secondary">Uh-oh! Page Not Found (404)</h3>
+        <hr>
+        <p class="err-msg">
+            It seems you’ve wandered off the beaten path and ended up in the land of missing pages.
+        </p>
+        <p class="err-msg">
+            Here are a few things you can try:
+        </p>
+        <ul class="err-msg">
+            <li><strong>Double-check the URL:</strong> Even the smallest typo can send you on an unexpected adventure.
+            </li>
+            <li><strong>Go back:</strong> Hit the back button and pretend this never happened.</li>
+            <li><strong>Return to our homepage:</strong> <a href="/">Back to safety</a></li>
+            <li><strong>Use the search bar:</strong> Find exactly what you’re looking for without the detours</li>
+        </ul>
+        <p class="err-msg">Feeling lost? Here’s something to cheer you up:</p>
+        <p class="err-msg text-dark">Why did the computer go to the doctor?</p>
+        <p class="err-msg text-primary">Because it had a virus!</p>
+        <p class="err-msg">Don’t worry, our site is healthy and ready to guide you. Happy exploring!</p>
+    </div>
+</div>
+{{end}}
