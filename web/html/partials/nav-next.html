@@ -1,19 +1,15 @@
 {{ define "partials/nav-next.html"}}
-<div class="container-fluid">
-    <div class="row col-12 col-md-4 offset-md-8">
-        <div class="col-auto justify-content-right">
-            <a href="/"><button type="button" class="btn btn-outline-info"><-- Home</button></a>
-        </div>
-        <div class="col-auto justify-content-right">
-            {{ if . }}
-            <div class="row">
-                <div class="col-auto">
-                    <a href="{{.Prev}}"><button type="button" class="btn btn-outline-info "><-- Prev</button></a>
-                    <a class="ml-1" href="{{.Next}}"><button type="button" class="btn btn-outline-info ">Next -></button></a>
-                </div>
-            </div>
-            {{ end}}
-        </div>
+<div class="container">
+    <div class="col-12 col-md-8 offset-md-2 d-flex justify-content-center align-items-center">
+        <a href="/"><button type="button" class="btn btn-outline-info mr-2">Home</button></a>
+        {{ if . }}
+            {{ if notEmpty .Prev}}
+                <a href="{{.Prev}}"><button type="button" class="btn btn-outline-info ">Prev</button></a>
+            {{ end }}
+            {{ if notEmpty .Next}}
+                <a  href="{{.Next}}"><button type="button" class="btn btn-outline-info ">Next</button></a>
+            {{end}}
+        {{ end}}
     </div>
 </div>
 {{ end }}

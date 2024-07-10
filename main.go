@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"text/template"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -51,12 +52,20 @@ func HandleBlogPage(c *gin.Context) {
 	})
 }
 
+// isNotEmptyString: to be used in templates to see if the value is not empty string
+func isNotEmptyString(a string) bool {
+	return a != ""
+}
+
 func main() {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 
 	// r.Static("/images", fmt.Sprintf("%s/images/", dirStatic))
 	// r.Static("/js", fmt.Sprintf("%s/js/", dirStatic))
+	r.SetFuncMap(template.FuncMap{
+		"notEmpty": isNotEmptyString,
+	})
 
 	r.LoadHTMLGlob("web/html/**/*")
 	r.Static("/templates", "web/templates/")
