@@ -9,6 +9,9 @@
     {{ else }}
     {{ template "partials/404-blog.html"}}
     {{ end}}
+    <!-- at the end of every page this shall give options to move next or go back home -->
+    <!-- Such navigration is contextual and depends on the blogdata, the template only inserts the links with relevant icons  -->
+    {{template "partials/nav-next.html" .NavData}}
 </body>
 {{ template "partials/footer.html" .}}
 

@@ -47,6 +47,7 @@ func HandleBlogPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "blog.html", gin.H{
 		"Title":    "Gills & Chlorophyll",
 		"BlogData": data,
+		"NavData":  data.Nav,
 	})
 }
 

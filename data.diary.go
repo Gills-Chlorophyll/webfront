@@ -7,6 +7,10 @@ type BlogPara struct {
 	Txt     template.HTML // text in the paragraph
 }
 
+type BlogNav struct {
+	Next string // link redirect to the next blog
+}
+
 type Blog struct {
 	Header   string
 	CoverImg string
@@ -14,6 +18,7 @@ type Blog struct {
 	Author   string
 	Owner    string
 	Paras    []BlogPara
+	Nav      *BlogNav // redirect away from this blog to another relevant blogs
 }
 
 var (
@@ -24,6 +29,7 @@ var (
 			Purport:  "Spirits are high, energies are focused, and everyone is excited to begin. I have a feeling this will be a long journey, but the team is optimistic about the results. We're ready to hit the ground running.",
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
+			Nav:      &BlogNav{Next: "/dear-diary/april-2024"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `For our initial setup, we implemented a <span class="text-dark-emphasis">1:2 ratio of bed volume to fish
 				water</span>, which deviates from standard recommendations. However, we chose this approach to maintain a <span class="text-dark-emphasis">low stocking density.</span>`},
@@ -51,6 +57,7 @@ var (
 			Purport:  "Every step gives us much needed fillip in confidence. The system is not as responsive as would have loved it to be but we have some good water readings.",
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
+			Nav:      &BlogNav{Next: "/dear-diary/may-2024"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `Ammonia had some initial inertia, as the readings would just drop with no signs of nitrites or nitrates. It  was a bit disheartening initially but we kept at it and gave it a slightly steeper kick start, Voila! a week down the line it was all working as expected. `},
 				{ImgPath: "", Txt: `The tomato plants are thriving, exhibiting full, green foliage with no signs of vein or tip yellowing. Although we anticipated some bronzing of the leaves, this issue has not arisen. While some flowers have dropped prematurely, those that remain show no deficiencies.`},
@@ -98,6 +105,7 @@ var (
 			Purport:  "When you have more doubts than you have answers, would it mean you are on the right path or atleast headed to one?",
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
+			Nav:      &BlogNav{Next: "/dear-diary/june-2024"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `May did not start on a great note - <br><br>
 				It was a bit disheartening to see the aborting flowers, plus the early pre-monsoon showers caused more flowers to drop prematurely. Did we miss the finish line by a whisker ? `},
