@@ -1,13 +1,25 @@
 {{ define "partials/nav-next.html"}}
 <div class="container">
     <div class="col-12 col-md-8 offset-md-2 d-flex justify-content-center align-items-center">
-        <a href="/"><button type="button" class="btn btn-outline-info mr-2">Home</button></a>
+        <a href="/">
+            <button type="button" class="btn btn-outline-info mr-2">
+                <i class="bi bi-house-fill">Home</i>
+            </button>
+        </a>
         {{ if . }}
             {{ if notEmpty .Prev}}
-                <a href="{{.Prev}}"><button type="button" class="btn btn-outline-info ">Prev</button></a>
+                <a href="{{.Prev}}">
+                    <button type="button" class="btn btn-outline-info mr-1 ">
+                        <i class="bi bi-arrow-left-circle-fill">Perv</i>
+                    </button>
+                </a>
             {{ end }}
             {{ if notEmpty .Next}}
-                <a  href="{{.Next}}"><button type="button" class="btn btn-outline-info ">Next</button></a>
+                <a  href="{{.Next}}">
+                    <button type="button" class="btn btn-outline-info ">
+                        <i class="bi bi-arrow-right-circle-fill">Next</i>
+                    </button>
+                </a>
             {{end}}
         {{ end}}
     </div>
