@@ -1,0 +1,29 @@
+<!-- Enlisting a blog / blog like contents in a slice or map  -->
+{{ define "partials/enlist.html"}}
+<style>
+    .enlisted-image {
+        height: auto;
+        width: 20%;
+    }
+
+    @media (min-width: 768px) {
+        .enlisted-image {
+            height: auto;
+            width: 10%;
+        }
+    }
+</style>
+<div class="list-group">
+    {{ range .}}
+    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <img src="{{.CoverImg}}" alt="Blog cover image" class="enlisted-image img-fluid rounded-circle">
+            <h5 class="mb-1">{{ .Header }}</h5>
+            <small>{{.Author}}</small>
+        </div>
+        <p class="mb-1">{{.Purport}}</p>
+        <small>{{.Gist}}</small>
+    </a>
+    {{ end }}
+</div>
+{{ end }}

@@ -1,6 +1,9 @@
 package main
 
-import "html/template"
+import (
+	"fmt"
+	"html/template"
+)
 
 type BlogPara struct {
 	ImgPath string        // img alongside
@@ -14,20 +17,51 @@ type BlogNav struct {
 
 type Blog struct {
 	Header   string
+	Slog     string // this is when mapping to the url, or searching by the url params
 	CoverImg string
-	Purport  template.HTML
+	Purport  template.HTML // this is an phrase to summarise the blog but with words not directly related to the blog
+	Gist     template.HTML // this gives a shrt description on what the blog is all about
 	Author   string
 	Owner    string
 	Paras    []BlogPara
 	Nav      *BlogNav // redirect away from this blog to another relevant blogs
 }
 
+type ListOfBlogs []Blog
+
+func (lb ListOfBlogs) SearchWith(slog string) (*Blog, error) {
+	for _, b := range lb {
+		if b.Slog == slog {
+			return &b, nil
+		}
+	}
+	return nil, fmt.Errorf("failed to get any blog with the slog %s", slog)
+}
+
+// Paginate : given the current page and the size of the page, this gives the list of blogs to be displayed.
+// Everytime the user hits url with pagination information this can used to traverse and section the total data
+func (lb ListOfBlogs) Paginate(perPage, currPage int) (ListOfBlogs, int) {
+	pages := len(lb) / perPage
+	if len(lb)%perPage != 0 {
+		pages++
+	}
+	start := (currPage - 1) * perPage
+	end := start + perPage
+	if perPage*currPage > len(lb) {
+		return lb, pages
+	} else {
+		return lb[start:end], pages
+	}
+}
+
 var (
-	DiaryData = map[string]Blog{
-		"march-2024": {
+	DiaryData = ListOfBlogs{
+		{
 			Header:   "March 2024",
+			Slog:     "march-2024",
 			CoverImg: "/images/tomato_gravel2.png",
 			Purport:  "Spirits are high, energies are focused, and everyone is excited to begin. I have a feeling this will be a long journey, but the team is optimistic about the results. We're ready to hit the ground running.",
+			Gist:     `All that happened in March of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
 			Nav:      &BlogNav{Next: "/dear-diary/april-2024", Prev: ""},
@@ -52,10 +86,12 @@ var (
 			},
 		},
 
-		"april-2024": {
+		{
 			Header:   "April 2024",
+			Slog:     "april-2024",
 			CoverImg: "/images/alienlettucefarm.png",
 			Purport:  "Every step gives us much needed fillip in confidence. The system is not as responsive as would have loved it to be but we have some good water readings.",
+			Gist:     `All that happened in April of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
 			Nav:      &BlogNav{Next: "/dear-diary/may-2024", Prev: "/dear-diary/march-2024"},
@@ -100,10 +136,12 @@ var (
 				{ImgPath: "", Txt: `Meanwhile Eensymachines has already started developing a prototype for the automation. `},
 			},
 		},
-		"may-2024": {
+		{
 			Header:   "May 2024",
+			Slog:     "may-2024",
 			CoverImg: "/images/water_lettuce.png",
 			Purport:  "When you have more doubts than you have answers, would it mean you are on the right path or atleast headed to one?",
+			Gist:     `Developments that happened May of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
 			Nav:      &BlogNav{Next: "/dear-diary/june-2024", Prev: "/dear-diary/april-2024"},
@@ -147,10 +185,12 @@ var (
 			</table>`},
 			},
 		},
-		"june-2024": {
+		{
 			Header:   "June 2024",
+			Slog:     "june-2024",
 			CoverImg: "/images/tomato_array.png",
 			Purport:  "Knee jerk reactions are often riddled side effects, but unless you get to experience one you wouldn't learn",
+			Gist:     `Unfoldingof events in June 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
 			Nav:      &BlogNav{Next: "", Prev: "/dear-diary/may-2024"},

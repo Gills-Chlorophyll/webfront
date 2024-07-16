@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 	"text/template"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,10 @@ const (
 	AboutAquaponics
 	AboutJourney
 	AboutJoinus
+)
+
+const (
+	ENLISTING_PER_PAGE = 2
 )
 
 func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
@@ -37,8 +42,8 @@ func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
 }
 
 func HandleBlogPage(c *gin.Context) {
-	data, ok := DiaryData[c.Param("idx")]
-	if !ok {
+	data, err := DiaryData.SearchWith(c.Param("idx"))
+	if err != nil {
 		c.HTML(http.StatusOK, "blog.html", gin.H{
 			"Title":    "Gills & Chlorophyll",
 			"BlogData": nil,
@@ -49,6 +54,24 @@ func HandleBlogPage(c *gin.Context) {
 		"Title":    "Gills & Chlorophyll",
 		"BlogData": data,
 		"NavData":  data.Nav,
+	})
+}
+
+func HndlDiaryIndex(c *gin.Context) {
+	/* ==============
+	Getting the current page requested
+	==============*/
+	page := 1
+	currPage := c.Query("page")
+	if currPage != "" {
+		val, _ := strconv.ParseInt(currPage, 10, 64)
+		page = int(val)
+	}
+	data, pages := DiaryData.Paginate(ENLISTING_PER_PAGE, page)
+	c.HTML(http.StatusOK, "enlist-blogs.html", gin.H{
+		"Title":      "Gills & Chlorophyll",
+		"Data":       data,
+		"Pagination": pages,
 	})
 }
 
@@ -81,6 +104,9 @@ func main() {
 	r.GET("/about-aquaponics", HandleIndexPage(AboutAquaponics))
 	r.GET("/about-journey", HandleIndexPage(AboutJourney))
 	r.GET("/about-joinus", HandleIndexPage(AboutJoinus))
+
+	r.GET("/dear-diary/", HndlDiaryIndex)
 	r.GET("/dear-diary/:idx", HandleBlogPage)
+
 	log.Fatal(r.Run(":8080"))
 }

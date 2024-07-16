@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ template "partials/head.html" .}}
+
+<body>
+    {{ template "partials/nav.html" .}}
+    <div class="container mt-5">
+        <div class="col-12 col-md-8 offset-md-2">
+            {{ template "partials/enlist.html" .Data}}
+        </div>
+    </div>
+</body>
+{{ template "partials/footer.html" .}}
+
+</html>
