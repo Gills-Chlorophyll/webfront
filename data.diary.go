@@ -13,8 +13,9 @@ type BlogPara struct {
 }
 
 type BlogNav struct {
-	Next string // link redirect to the next blog
-	Prev string // link redirect to the previous blog
+	Next     string // link redirect to the next blog
+	Prev     string // link redirect to the previous blog
+	BaseHref string // base resource url // example /dear-diary
 }
 
 type Blog struct {
@@ -57,6 +58,7 @@ func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 	if currPage < pages {
 		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:end], TotalPages: pages}}
 	} else if currPage == pages {
+		// For the last page, cannot have the end limiter since it would then give out of bounds error
 		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:], TotalPages: pages}}
 	} else {
 		// When its beyond the page limits then it should be an empty array
@@ -80,7 +82,7 @@ var (
 			Gist:     `All that happened in March of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
-			Nav:      &BlogNav{Next: "/dear-diary/april-2024", Prev: ""},
+			Nav:      &BlogNav{Next: "april-2024", Prev: "", BaseHref: "/dear-diary"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `For our initial setup, we implemented a <span class="text-dark-emphasis">1:2 ratio of bed volume to fish
 				water</span>, which deviates from standard recommendations. However, we chose this approach to maintain a <span class="text-dark-emphasis">low stocking density.</span>`},
@@ -110,7 +112,7 @@ var (
 			Gist:     `All that happened in April of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
-			Nav:      &BlogNav{Next: "/dear-diary/may-2024", Prev: "/dear-diary/march-2024"},
+			Nav:      &BlogNav{Next: "may-2024", Prev: "march-2024", BaseHref: "/dear-diary"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `Ammonia had some initial inertia, as the readings would just drop with no signs of nitrites or nitrates. It  was a bit disheartening initially but we kept at it and gave it a slightly steeper kick start, Voila! a week down the line it was all working as expected. `},
 				{ImgPath: "", Txt: `The tomato plants are thriving, exhibiting full, green foliage with no signs of vein or tip yellowing. Although we anticipated some bronzing of the leaves, this issue has not arisen. While some flowers have dropped prematurely, those that remain show no deficiencies.`},
@@ -160,7 +162,7 @@ var (
 			Gist:     `Developments that happened May of 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
-			Nav:      &BlogNav{Next: "/dear-diary/june-2024", Prev: "/dear-diary/april-2024"},
+			Nav:      &BlogNav{Next: "june-2024", Prev: "april-2024", BaseHref: "/dear-diary"},
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `May did not start on a great note - <br><br>
 				It was a bit disheartening to see the aborting flowers, plus the early pre-monsoon showers caused more flowers to drop prematurely. Did we miss the finish line by a whisker ? `},
@@ -209,7 +211,7 @@ var (
 			Gist:     `Unfoldingof events in June 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
-			Nav:      &BlogNav{Next: "", Prev: "/dear-diary/may-2024"},
+			Nav:      &BlogNav{Next: "", Prev: "may-2024", BaseHref: "/dear-diary"},
 			Paras: []BlogPara{
 				{ImgPath: "/images/liquid_chromatography.png", Txt: `Now that we had established the sustainability of the nitrogen cycle, we decided to undertake a system overhaul and cleaning. We had been experiencing consistent incidents of medium-sized Koi dying without any signs of infection or distress. Although aeration was adequate, we suspected the fish were succumbing to oxygen deprivation. Therefore, we decided to proceed with the system overhaul. It was a Herculean task to dispose of approximately 400 liters of water and move around 100 kg of gravel while ensuring no additional fish casualties.`},
 				{ImgPath: "", Txt: `The tomato plants thrived post-overhaul, transitioning from green to red without any yellowing. However, the ammonia levels were not as encouraging, as the remaining fish, with minimal stocking, struggled to raise the ammonia levels sufficiently. To address this, we added more fish—ornamental sharks known for their hardiness and ability to tolerate water temperature fluctuations.`},
