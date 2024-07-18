@@ -19,7 +19,7 @@ const (
 )
 
 const (
-	ENLISTING_PER_PAGE = 2
+	ENLISTING_PER_PAGE = 3
 )
 
 func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
@@ -67,11 +67,16 @@ func HndlDiaryIndex(c *gin.Context) {
 		val, _ := strconv.ParseInt(currPage, 10, 64)
 		page = int(val)
 	}
-	data, pages := DiaryData.Paginate(ENLISTING_PER_PAGE, page)
+	result := DiaryData.Paginate(ENLISTING_PER_PAGE, page)
+	if yes, herr := result.HasError(); yes {
+		herr.ToHttpCtx(c)
+		return
+	}
 	c.HTML(http.StatusOK, "enlist-blogs.html", gin.H{
-		"Title":      "Gills & Chlorophyll",
-		"Data":       data,
-		"Pagination": pages,
+		"Title": "Gills & Chlorophyll",
+		// TODO: need to make changes to the template
+		// result has total pages + list of blogs
+		"Data": result.Result.(*PaginationResult),
 	})
 }
 

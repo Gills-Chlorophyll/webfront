@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"html/template"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type BlogPara struct {
@@ -40,17 +42,31 @@ func (lb ListOfBlogs) SearchWith(slog string) (*Blog, error) {
 
 // Paginate : given the current page and the size of the page, this gives the list of blogs to be displayed.
 // Everytime the user hits url with pagination information this can used to traverse and section the total data
-func (lb ListOfBlogs) Paginate(perPage, currPage int) (ListOfBlogs, int) {
+// Sends back the data (sectioned) and the total number of pages
+func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 	pages := len(lb) / perPage
 	if len(lb)%perPage != 0 {
 		pages++
 	}
+	if currPage < 1 {
+		log.Warnf("requested page: %d, invalid switching to page 1", currPage)
+		currPage = 1 // currPage has to be atleast 1, any less and the start will be miscaculated
+	}
 	start := (currPage - 1) * perPage
 	end := start + perPage
-	if perPage*currPage > len(lb) {
-		return lb, pages
+	if currPage < pages {
+		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:end], TotalPages: pages}}
+	} else if currPage == pages {
+		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:], TotalPages: pages}}
 	} else {
-		return lb[start:end], pages
+		// When its beyond the page limits then it should be an empty array
+		log.WithFields(log.Fields{
+			"page":        currPage,
+			"pages_total": pages,
+		}).Errorf("page beyond number of pages")
+		return &ResultOrErr{Err: &InvalidQueryParam{
+			Err: fmt.Errorf("invalid page number for the blog list"),
+		}, Result: &PaginationResult{BlogList: ListOfBlogs{}, TotalPages: pages}}
 	}
 }
 
