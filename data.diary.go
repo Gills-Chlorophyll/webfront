@@ -41,13 +41,34 @@ func (lb ListOfBlogs) SearchWith(slog string) (*Blog, error) {
 	return nil, fmt.Errorf("failed to get any blog with the slog %s", slog)
 }
 
-// Paginate : given the current page and the size of the page, this gives the list of blogs to be displayed.
-// Everytime the user hits url with pagination information this can used to traverse and section the total data
-// Sends back the data (sectioned) and the total number of pages
+// Paginate : for a  given page this can send back only those blogs which are relevant to the page.
+// Its also sends the page information - index of the page , href url of the page
+// Incase of error the result is nil, with custom error which indicates the exact error and http error code
+//
+/*
+
+	result := DiaryData.Paginate(ENLISTING_PER_PAGE, page)
+	if yes, herr := result.HasError(); yes {
+		herr.ToHttpCtx(c)
+		return
+	}
+
+	c.HTML(http.StatusOK, "page.html", gin.H{
+		"Data": result.Result.(*PaginationResult),
+	})
+*/
 func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
-	pages := len(lb) / perPage
+	if len(lb) == 0 || perPage <= 0 {
+		// straight error condition
+		log.WithFields(log.Fields{
+			"bloglist_len": len(lb),
+			"per_page":     perPage,
+		}).Error("failed pagination")
+		return &ResultOrErr{Err: &InvalidArgument{Err: fmt.Errorf("bloglist empty or the number blogs per page is invalid")}, Result: nil}
+	}
+	count := len(lb) / perPage
 	if len(lb)%perPage != 0 {
-		pages++
+		count++
 	}
 	if currPage < 1 {
 		log.Warnf("requested page: %d, invalid switching to page 1", currPage)
@@ -55,17 +76,23 @@ func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 	}
 	start := (currPage - 1) * perPage
 	end := start + perPage
-	if currPage < pages {
+
+	pages := []Page{}
+	for i := 1; i <= count; i++ {
+		pages = append(pages, Page{Idx: i, HRef: fmt.Sprintf("%s/?page=%d", lb[0].Nav.BaseHref, i)})
+	}
+
+	if currPage < count {
 		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:end], TotalPages: pages}}
-	} else if currPage == pages {
+	} else if currPage == count {
 		// For the last page, cannot have the end limiter since it would then give out of bounds error
 		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:], TotalPages: pages}}
 	} else {
 		// When its beyond the page limits then it should be an empty array
 		log.WithFields(log.Fields{
 			"page":        currPage,
-			"pages_total": pages,
-		}).Errorf("page beyond number of pages")
+			"pages_total": count,
+		}).Errorf("page beyond number of count")
 		return &ResultOrErr{Err: &InvalidQueryParam{
 			Err: fmt.Errorf("invalid page number for the blog list"),
 		}, Result: &PaginationResult{BlogList: ListOfBlogs{}, TotalPages: pages}}

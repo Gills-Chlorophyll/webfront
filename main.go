@@ -85,6 +85,14 @@ func isNotEmptyString(a string) bool {
 	return a != ""
 }
 
+func countToRange(count int) []int {
+	result := []int{}
+	for i := 1; i <= count; i++ {
+		result = append(result, i)
+	}
+	return result
+}
+
 func main() {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
@@ -92,7 +100,8 @@ func main() {
 	// r.Static("/images", fmt.Sprintf("%s/images/", dirStatic))
 	// r.Static("/js", fmt.Sprintf("%s/js/", dirStatic))
 	r.SetFuncMap(template.FuncMap{
-		"notEmpty": isNotEmptyString,
+		"notEmpty":     isNotEmptyString,
+		"countToRange": countToRange,
 	})
 
 	r.LoadHTMLGlob("web/html/**/*")

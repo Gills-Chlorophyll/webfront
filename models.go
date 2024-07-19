@@ -19,9 +19,14 @@ func (rore *ResultOrErr) HasError() (bool, HttpErr) {
 	return (rore.Err != nil), rore.Err
 }
 
+type Page struct {
+	Idx  int    // index of the page, index for pages start at 1
+	HRef string // link to the actual page, hence helps in ranging over pagination i
+}
+
 type PaginationResult struct {
 	BlogList   ListOfBlogs
-	TotalPages int
+	TotalPages []Page
 }
 
 type HttpErr interface {
@@ -40,5 +45,19 @@ func (iqp *InvalidQueryParam) Error() string {
 func (iqp *InvalidQueryParam) ToHttpCtx(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 		"err_msg": iqp.Error(),
+	})
+}
+
+type InvalidArgument struct {
+	Err error
+}
+
+func (ia *InvalidArgument) Error() string {
+	return fmt.Errorf("One or more arguemnts to operations is invalid : %s", ia.Err.Error()).Error()
+}
+
+func (ia *InvalidArgument) ToHttpCtx(c *gin.Context) {
+	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		"err_msg": ia.Error(),
 	})
 }

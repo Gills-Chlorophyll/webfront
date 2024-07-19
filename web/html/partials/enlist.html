@@ -26,4 +26,12 @@
     </a>
     {{ end }}
 </div>
+<div class="btn-toolbar my-3 d-flex justify-content-center align-items-center" role="toolbar"
+    aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        {{ range .TotalPages}}
+        <button onclick="location.href='{{.HRef}}'" type="button" class="btn btn-secondary">{{.Idx}}</button>
+        {{ end }}
+    </div>
+</div>
 {{ end }}
