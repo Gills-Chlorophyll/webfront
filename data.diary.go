@@ -58,14 +58,17 @@ func (lb ListOfBlogs) SearchWith(slog string) (*Blog, error) {
 	})
 */
 func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
+	// Input validation
 	if len(lb) == 0 || perPage <= 0 {
-		// straight error condition
 		log.WithFields(log.Fields{
 			"bloglist_len": len(lb),
 			"per_page":     perPage,
 		}).Error("failed pagination")
 		return &ResultOrErr{Err: &InvalidArgument{Err: fmt.Errorf("bloglist empty or the number blogs per page is invalid")}, Result: nil}
 	}
+	// -----------
+	// cCounting the total number of pages
+	// -----------
 	count := len(lb) / perPage
 	if len(lb)%perPage != 0 {
 		count++
@@ -74,19 +77,23 @@ func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 		log.Warnf("requested page: %d, invalid switching to page 1", currPage)
 		currPage = 1 // currPage has to be atleast 1, any less and the start will be miscaculated
 	}
-	start := (currPage - 1) * perPage
+	// -----------------
+	// getting the paged results from the entire data
+	// -----------------
+	start := (currPage - 1) * perPage // slice index starts from 0, pages start from 1
 	end := start + perPage
 
 	pages := []Page{}
 	for i := 1; i <= count; i++ {
-		pages = append(pages, Page{Idx: i, HRef: fmt.Sprintf("%s/?page=%d", lb[0].Nav.BaseHref, i)})
+		// For the array of page buttons Idx on the button title , while Href used for button.onclick event
+		pages = append(pages, Page{Idx: i, HRef: fmt.Sprintf("%s/?page=%d", lb[0].Nav.BaseHref, i)}) // appending page objects
 	}
-
+	// []Page -- > PaginationResult{} -- > ResultOrErr
 	if currPage < count {
 		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:end], TotalPages: pages}}
 	} else if currPage == count {
-		// For the last page, cannot have the end limiter since it would then give out of bounds error
-		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:], TotalPages: pages}}
+		// for the last page, it cannot have an end, since then it would be out of bounds exception
+		return &ResultOrErr{Err: nil, Result: &PaginationResult{BlogList: lb[start:], TotalPages: pages}} // for the last page
 	} else {
 		// When its beyond the page limits then it should be an empty array
 		log.WithFields(log.Fields{
@@ -95,7 +102,7 @@ func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 		}).Errorf("page beyond number of count")
 		return &ResultOrErr{Err: &InvalidQueryParam{
 			Err: fmt.Errorf("invalid page number for the blog list"),
-		}, Result: &PaginationResult{BlogList: ListOfBlogs{}, TotalPages: pages}}
+		}, Result: nil}
 	}
 }
 
