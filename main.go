@@ -93,6 +93,13 @@ func countToRange(count int) []int {
 	return result
 }
 
+func HndlGallery(c *gin.Context) {
+	c.HTML(http.StatusOK, "gallery.html", gin.H{
+		"Title": "Gills & Chlorophyll",
+		"Data":  imageGallery,
+	})
+}
+
 func main() {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
@@ -120,6 +127,7 @@ func main() {
 	r.GET("/about-joinus", HandleIndexPage(AboutJoinus))
 
 	r.GET("/dear-diary/", HndlDiaryIndex)
+	r.GET("/gallery/", HndlGallery)
 	r.GET("/dear-diary/:idx", HandleBlogPage)
 
 	log.Fatal(r.Run(":8080"))
