@@ -20,8 +20,9 @@ func (rore *ResultOrErr) HasError() (bool, HttpErr) {
 }
 
 type Page struct {
-	Idx  int    // index of the page, index for pages start at 1
-	HRef string // link to the actual page, hence helps in ranging over pagination i
+	Idx    int    // index of the page, index for pages start at 1
+	HRef   string // link to the actual page, hence helps in ranging over pagination
+	IsCurr bool   // flag to indicate that this is the current page
 }
 
 type PaginationResult struct {

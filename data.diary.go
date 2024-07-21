@@ -86,7 +86,7 @@ func (lb ListOfBlogs) Paginate(perPage, currPage int) *ResultOrErr {
 	pages := []Page{}
 	for i := 1; i <= count; i++ {
 		// For the array of page buttons Idx on the button title , while Href used for button.onclick event
-		pages = append(pages, Page{Idx: i, HRef: fmt.Sprintf("%s/?page=%d", lb[0].Nav.BaseHref, i)}) // appending page objects
+		pages = append(pages, Page{IsCurr: i == currPage, Idx: i, HRef: fmt.Sprintf("%s/?page=%d", lb[0].Nav.BaseHref, i)}) // appending page objects
 	}
 	// []Page -- > PaginationResult{} -- > ResultOrErr
 	if currPage < count {
