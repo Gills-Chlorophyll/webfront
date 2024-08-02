@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-{{ template "partials/head.html" .}}
+{{ template "partials/head.html" .OpnGraph}}
 
 <body>
     {{ template "partials/nav.html" .}}
-    {{ if .BlogData }}
-    {{ template "partials/blog-post.html" .BlogData}}
+    {{ if .Content }}
+    {{ template "partials/blog-post.html" .Content}}
     {{ else }}
     {{ template "partials/404-blog.html"}}
     {{ end}}
     <!-- at the end of every page this shall give options to move next or go back home -->
     <!-- Such navigration is contextual and depends on the blogdata, the template only inserts the links with relevant icons  -->
-    {{template "partials/nav-next.html" .NavData}}
+    {{template "partials/nav-next.html" .Content.Nav}}
 </body>
-{{ template "partials/footer.html" .}}
+{{ template "partials/footer.html" .Foot}}
 
 </html>

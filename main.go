@@ -1,12 +1,16 @@
 package main
 
 import (
-	"net/http"
-	"strconv"
+	"os"
 	"text/template"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 type TypOfIndexPage uint8
@@ -20,95 +24,70 @@ const (
 
 const (
 	ENLISTING_PER_PAGE = 3
+	VULTR_S3_BUCKET    = "gillschlorophyll"
 )
 
-func HandleIndexPage(typOfPage TypOfIndexPage) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		data := []MoreInfo{}
-		if typOfPage == AboutAquaponics {
-			data = DataAboutAquaponics
-		} else if typOfPage == AboutJourney {
-			data = DataAboutJourney
-		} else if typOfPage == AboutJoinus {
-			data = DataAboutJoinus
-		} else if typOfPage == Splash {
-			data = DataSplash
+var (
+	AWS_S3 *s3.S3
+	// For each of the payload the footer content is populated once
+	// For the prototype stage we are leaving it blank, but as we expand the social media footprint in we can populate this
+	FOOTER = &Footer{
+		FBLink:     "",
+		GmailLink:  "",
+		LinkedLink: "",
+		GitLink:    "",
+		Phone:      "",
+		Address:    "",
+		Email:      "",
+	}
+)
+
+func init() {
+	/* Aws session for vultr object storage */
+	// S3 signed urls for images
+	var accessKey, secretKey, endpoint, region string
+	envs := map[string]*string{
+		"S3_ACCESSKEY": &accessKey,
+		"S3_SECRETKEY": &secretKey,
+		"S3_ENDPOINT":  &endpoint,
+		"S3_REGION":    &region,
+	}
+	for k, v := range envs {
+		if os.Getenv(k) == "" {
+			log.Panicf("Environment variable value not available %s", k)
+			return
+		} else {
+			*v = os.Getenv(k)
 		}
-		ctx.HTML(http.StatusOK, "index.html", gin.H{
-			"Title":     "Gills & Chlorophyll",
-			"TemplData": data,
-		})
 	}
-}
-
-func HandleBlogPage(c *gin.Context) {
-	data, err := DiaryData.SearchWith(c.Param("idx"))
+	// Create a new session with the provided credentials
+	sess, err := session.NewSession(&aws.Config{
+		Region:           aws.String(region),
+		Endpoint:         aws.String(endpoint),
+		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
+		S3ForcePathStyle: aws.Bool(true),
+	})
 	if err != nil {
-		c.HTML(http.StatusOK, "blog.html", gin.H{
-			"Title":    "Gills & Chlorophyll",
-			"BlogData": nil,
-		})
-		return
+		log.Errorf("Failed to create new aws session, check params %s", err)
+		panic("Could not reach object storage for static files")
 	}
-	c.HTML(http.StatusOK, "blog.html", gin.H{
-		"Title":    "Gills & Chlorophyll",
-		"BlogData": data,
-		"NavData":  data.Nav,
-	})
-}
 
-func HndlDiaryIndex(c *gin.Context) {
-	/* ==============
-	Getting the current page requested
-	==============*/
-	page := 1
-	currPage := c.Query("page")
-	if currPage != "" {
-		val, _ := strconv.ParseInt(currPage, 10, 64)
-		page = int(val)
-	}
-	result := DiaryData.Paginate(ENLISTING_PER_PAGE, page)
-	if yes, herr := result.HasError(); yes {
-		herr.ToHttpCtx(c)
-		return
-	}
-	c.HTML(http.StatusOK, "enlist-blogs.html", gin.H{
-		"Title": "Gills & Chlorophyll",
-		// TODO: need to make changes to the template
-		// result has total pages + list of blogs
-		"Data": result.Result.(*PaginationResult),
-	})
-}
-
-// isNotEmptyString: to be used in templates to see if the value is not empty string
-func isNotEmptyString(a string) bool {
-	return a != ""
-}
-
-func countToRange(count int) []int {
-	result := []int{}
-	for i := 1; i <= count; i++ {
-		result = append(result, i)
-	}
-	return result
-}
-
-func HndlGallery(c *gin.Context) {
-	c.HTML(http.StatusOK, "gallery.html", gin.H{
-		"Title": "Gills & Chlorophyll",
-		"Data":  imageGallery,
-	})
+	AWS_S3 = s3.New(sess)
 }
 
 func main() {
+
+	// key := "tomato_farming.png"
+
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 
 	// r.Static("/images", fmt.Sprintf("%s/images/", dirStatic))
 	// r.Static("/js", fmt.Sprintf("%s/js/", dirStatic))
 	r.SetFuncMap(template.FuncMap{
-		"notEmpty":     isNotEmptyString,
-		"countToRange": countToRange,
+		"notEmpty":      isNotEmptyString,
+		"countToRange":  countToRange,
+		"presignImgURL": presignImageUrl,
 	})
 
 	r.LoadHTMLGlob("web/html/**/*")
@@ -121,14 +100,15 @@ func main() {
 			"app": "aboutme",
 		})
 	})
-	r.GET("", HandleIndexPage(Splash))
-	r.GET("/about-aquaponics", HandleIndexPage(AboutAquaponics))
-	r.GET("/about-journey", HandleIndexPage(AboutJourney))
-	r.GET("/about-joinus", HandleIndexPage(AboutJoinus))
+	r.GET("", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Gills & Chlorophyll is an aquaponics project that attempts to change how we implement urban farming."), IndexPageContent(Splash), PageDispatch("index"))
+	r.GET("/about-aquaponics", HndlPagePayload("Gills & Chlorophyll", "tomato_farming.png", "Aquaponics urban farming", "Aquaponics is a modern urban soil-less farming method that can help us grow food sustainably."), IndexPageContent(AboutAquaponics), PageDispatch("index"))
+	r.GET("/about-journey", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Gills & Chlorophyll is an aquaponics project that attempts to change how we look at urban farming."), IndexPageContent(AboutJourney), PageDispatch("index"))
+	r.GET("/about-joinus", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Gills & Chlorophyll is an aquaponics project that attempts to change how we look at urban farming."), IndexPageContent(AboutJoinus), PageDispatch("index"))
 
-	r.GET("/dear-diary/", HndlDiaryIndex)
-	r.GET("/gallery/", HndlGallery)
-	r.GET("/dear-diary/:idx", HandleBlogPage)
+	r.GET("/dear-diary/", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Enlisting of all the monthly events chronologically"), DiaryIndexContent, PageDispatch("enlist-blogs"))
+	r.GET("/dear-diary/:idx", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Blogs are a way we share our earned knowledge wit you."), BlogPageContent, PageDispatch("blog")) // blog page
+
+	r.GET("/gallery/", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Gallery of all images from our site in Pune."), GalleryPageContent, PageDispatch("gallery"))
 
 	log.Fatal(r.Run(":8080"))
 }

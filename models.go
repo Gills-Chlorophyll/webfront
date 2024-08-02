@@ -30,6 +30,39 @@ type PaginationResult struct {
 	TotalPages []Page
 }
 
+type PagePayload struct {
+	OpnGraph *OpenGraph
+	Content  interface{} // page specific content
+	Foot     *Footer
+}
+
+type Footer struct {
+	FBLink     string
+	GmailLink  string
+	LinkedLink string
+	GitLink    string
+	Phone      string
+	Address    string
+	Email      string
+}
+
+// OpenGraphPayload : payload that every page needs to carry to be able to posted on social web
+// Find these fields being used on head partial template
+type OpenGraph struct {
+	Title   string
+	OgImage string
+	OgTitle string
+	OgDesc  string
+	OgUrl   string
+}
+
+// concrete Content under PagePayload
+type IndexPagePaylod struct {
+	// Any of the index pages - Splash, About Us, Journey, About aquaponics
+	// Basically anything that has images and  text paragraphs side by side
+	TemplData []MoreInfo
+}
+
 type HttpErr interface {
 	ToHttpCtx(c *gin.Context)
 }

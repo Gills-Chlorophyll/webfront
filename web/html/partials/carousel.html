@@ -16,7 +16,7 @@
             <div class="carousel-inner">
                 {{ range .}}
                 <div class="carousel-item {{ if .IsActive }} active {{ end}}">
-                    <img src="{{.Src}}" class="d-block w-100 img-fluid" alt="Slide 1">
+                    <img src="{{ presignImgURL .Src}}" class="d-block w-100 img-fluid" alt="Slide 1">
                     <div class="carousel-caption d-none d-md-block">
                         <h5>{{.Header}}</h5>
                         <p>{{.Caption}}</p>
