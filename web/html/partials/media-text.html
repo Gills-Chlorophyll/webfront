@@ -3,11 +3,11 @@
 while a row alignment in sm and below resolutions Send in the data from handler it gets formatted here as required-->
 <div class="container mt-5">
     <section class="d-block d-md-none">
-        {{ range .TemplData}}
+        {{ range .}}
         <div class="container mb-4">
             <div class="row justify-content-center mb-4">
                 <img style="max-width: 65%; height: auto;" class="align-self-center mr-3 rounded-circle"
-                    src="{{.ImgPath}}" alt="Generic placeholder image">
+                    src="{{presignImgURL .ImgPath}}" alt="Generic placeholder image">
             </div>
             <div class="row text-center">
                 <h4 class="text-secondary">{{.Header}}</h4>
@@ -20,11 +20,11 @@ while a row alignment in sm and below resolutions Send in the data from handler 
         {{ end }}
     </section>
     <section class="d-none d-md-block">
-        {{ range .TemplData}}
+        {{ range .}}
         <div class="container col-10 offset-1 mt-5">
             <div class="media">
                 <img style="max-width: 15%; height: auto;" class="align-self-center mr-3 rounded-circle"
-                    src="{{.ImgPath}}" alt="Generic placeholder image">
+                    src="{{presignImgURL .ImgPath}}" alt="Generic placeholder image">
                 <div class="media-body">
                     <h4 class="text-secondary">{{.Header}}</h4>
                     <hr>

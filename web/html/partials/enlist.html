@@ -17,7 +17,7 @@
     {{ range .BlogList}}
     <a href="{{.Nav.BaseHref}}/{{.Slog}}" class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
-            <img src="{{.CoverImg}}" alt="Blog cover image" class="enlisted-image img-fluid rounded-circle">
+            <img src="{{presignImgURL .CoverImg}}" alt="Blog cover image" class="enlisted-image img-fluid rounded-circle">
             <h5 class="mb-1">{{ .Header }}</h5>
             <small>{{.Author}}</small>
         </div>

@@ -111,7 +111,7 @@ var (
 		{
 			Header:   "March 2024",
 			Slog:     "march-2024",
-			CoverImg: "/images/tomato_gravel2.png",
+			CoverImg: "tomato_gravel2.png",
 			Purport:  "Spirits are high, energies are focused, and everyone is excited to begin. I have a feeling this will be a long journey, but the team is optimistic about the results. We're ready to hit the ground running.",
 			Gist:     `All that happened in March of 2024`,
 			Author:   "Niranjan Awati",
@@ -120,7 +120,7 @@ var (
 			Paras: []BlogPara{
 				{ImgPath: "", Txt: `For our initial setup, we implemented a <span class="text-dark-emphasis">1:2 ratio of bed volume to fish
 				water</span>, which deviates from standard recommendations. However, we chose this approach to maintain a <span class="text-dark-emphasis">low stocking density.</span>`},
-				{ImgPath: "/images/aquaponics_bell_siphon.png", Txt: `We faced several challenges with siphon calculations, but after overcoming a few setbacks, we achieved overall stability. Perfecting the siphon demanded a significant amount of our time and manpower, as
+				{ImgPath: "aquaponics_bell_siphon.png", Txt: `We faced several challenges with siphon calculations, but after overcoming a few setbacks, we achieved overall stability. Perfecting the siphon demanded a significant amount of our time and manpower, as
 				we were aware that once commissioned, it would be difficult to replace or even open for maintenance. At one
 				stage, we had to remove a functioning siphon due to its inability to break the flow at high inlet rates.`},
 				{ImgPath: "", Txt: `The water pump we selected was an old, non-submersible 1 HP motor. While it performed well, it was notably noisy and excessive for the <span class="text-dark-emphasis">48-inch head and 220-liter grow bed.</span> The
@@ -141,7 +141,7 @@ var (
 		{
 			Header:   "April 2024",
 			Slog:     "april-2024",
-			CoverImg: "/images/alienlettucefarm.png",
+			CoverImg: "alienlettucefarm.png",
 			Purport:  "Every step gives us much needed fillip in confidence. The system is not as responsive as would have loved it to be but we have some good water readings.",
 			Gist:     `All that happened in April of 2024`,
 			Author:   "Niranjan Awati",
@@ -191,7 +191,7 @@ var (
 		{
 			Header:   "May 2024",
 			Slog:     "may-2024",
-			CoverImg: "/images/water_lettuce.png",
+			CoverImg: "water_lettuce.png",
 			Purport:  "When you have more doubts than you have answers, would it mean you are on the right path or atleast headed to one?",
 			Gist:     `Developments that happened May of 2024`,
 			Author:   "Niranjan Awati",
@@ -201,7 +201,7 @@ var (
 				{ImgPath: "", Txt: `May did not start on a great note - <br><br>
 				It was a bit disheartening to see the aborting flowers, plus the early pre-monsoon showers caused more flowers to drop prematurely. Did we miss the finish line by a whisker ? `},
 				{ImgPath: "", Txt: `Some internet tips proved helpful, particularly the advice that "tomatoes are self-pollinating flowers." We decided to stimulate pollination by gently poking the flowers with cotton buds, which was effective. Within a week, we had a dozen tomatoes hanging on the vines, with almost all the treated flowers bearing fruit. However, the challenges didn't end there. While we had mastered the nitrogen cycle, ensuring the fruits ripened without dropping prematurely required the addition of rock phosphate (phosphorus) and seaweed solution (potassium). I researched these additives online to confirm their safety for the fish.`},
-				{ImgPath: "/images/culture_lab_lettuce.png", Txt: `The system appeared to need an overhaul. Early rains had caused moss to proliferate in all corners of the tank, and I suspected significant growth on the exposed ends of the bell siphon. Although the plants showed no signs of distress or deficiencies, structural adjustments to the grow bed were necessary before the onset of the monsoons. The IMD had predicted an El Niño effect, with an expected 6% increase in monsoon rainfall for the region. I was uncertain if the tomato plants could withstand the gusty winds and heavy showers.`},
+				{ImgPath: "culture_lab_lettuce.png", Txt: `The system appeared to need an overhaul. Early rains had caused moss to proliferate in all corners of the tank, and I suspected significant growth on the exposed ends of the bell siphon. Although the plants showed no signs of distress or deficiencies, structural adjustments to the grow bed were necessary before the onset of the monsoons. The IMD had predicted an El Niño effect, with an expected 6% increase in monsoon rainfall for the region. I was uncertain if the tomato plants could withstand the gusty winds and heavy showers.`},
 				{ImgPath: "", Txt: `What was significant then was we installed the automation electronics , with initial setting of 8 cycles / day, then bumped it up to 12 cycles per day operating at pulse every interval mode. Now we were not in danger of overworking the motor plus also had remote control on the flood - drain cycles.`},
 				{ImgPath: "", Txt: `The siphon exhibited signs of air bleeding, with the snorkel showing an air leak, leading to slight water logging in the grow bed. My suspicion about moss obstructing the siphon flow was confirmed, or perhaps the sealant on the siphon joints had deteriorated.<br><br>All in all - May had raised more questions than it had answers. `},
 				{ImgPath: "", Txt: `<table class="table table-hover">
@@ -240,14 +240,14 @@ var (
 		{
 			Header:   "June 2024",
 			Slog:     "june-2024",
-			CoverImg: "/images/tomato_array.png",
+			CoverImg: "tomato_array.png",
 			Purport:  "Knee jerk reactions are often riddled side effects, but unless you get to experience one you wouldn't learn",
 			Gist:     `Unfoldingof events in June 2024`,
 			Author:   "Niranjan Awati",
 			Owner:    "Eensymachines, Pune",
 			Nav:      &BlogNav{Next: "", Prev: "may-2024", BaseHref: "/dear-diary"},
 			Paras: []BlogPara{
-				{ImgPath: "/images/liquid_chromatography.png", Txt: `Now that we had established the sustainability of the nitrogen cycle, we decided to undertake a system overhaul and cleaning. We had been experiencing consistent incidents of medium-sized Koi dying without any signs of infection or distress. Although aeration was adequate, we suspected the fish were succumbing to oxygen deprivation. Therefore, we decided to proceed with the system overhaul. It was a Herculean task to dispose of approximately 400 liters of water and move around 100 kg of gravel while ensuring no additional fish casualties.`},
+				{ImgPath: "liquid_chromatography.png", Txt: `Now that we had established the sustainability of the nitrogen cycle, we decided to undertake a system overhaul and cleaning. We had been experiencing consistent incidents of medium-sized Koi dying without any signs of infection or distress. Although aeration was adequate, we suspected the fish were succumbing to oxygen deprivation. Therefore, we decided to proceed with the system overhaul. It was a Herculean task to dispose of approximately 400 liters of water and move around 100 kg of gravel while ensuring no additional fish casualties.`},
 				{ImgPath: "", Txt: `The tomato plants thrived post-overhaul, transitioning from green to red without any yellowing. However, the ammonia levels were not as encouraging, as the remaining fish, with minimal stocking, struggled to raise the ammonia levels sufficiently. To address this, we added more fish—ornamental sharks known for their hardiness and ability to tolerate water temperature fluctuations.`},
 				{ImgPath: "", Txt: `Still have a feeling fish are falling short of generating that ammonia levels. The system is running low on a weak nitrogen cycle - but getting Tilapia is a challenge.  - The ammonia is just barely enough to sustain the plants we have used. We decide to let the cycle settle in - was the overhaul a little too early?`},
 				{ImgPath: "", Txt: `<table class="table table-hover">
