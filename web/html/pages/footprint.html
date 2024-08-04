@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ template "partials/head.html" .OpnGraph}}
+
+<body>
+    {{ template "partials/nav.html" .}}
+    {{ if .Content }}
+    {{ template "partials/calc-footprint.html" .Content}}
+    {{ else }}
+    {{ template "partials/404-blog.html"}}
+    {{ end}}
+  
+</body>
+{{ template "partials/footer.html" .Foot}}
+
+</html>

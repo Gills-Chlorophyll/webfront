@@ -1,0 +1,74 @@
+{{ define "partials/calc-footprint.html" }}
+<style>
+    .legend-image {
+        max-width: 40%;
+        height: auto;
+    }
+
+    @media (min-width: 786px) {
+        .legend-image {
+            max-width: 30%;
+            height: auto;
+        }
+    }
+</style>
+<div class="container col-10 offset-1 col-md-6 offset-md-3 mt-5">
+    <form action="/footprint" method="post">
+        <fieldset>
+            <div class="container d-flex" style="justify-content: space-between; align-items: end;">
+                <img class="img-fluid legend-image align-self-center rounded-circle" 
+                src="{{ presignImgURL "green_earth.png"}} " alt="">
+                <div>
+                    <legend><h2>Co<sub>2</sub>&nbsp;footprint</h2></legend>
+                </div>
+            </div>
+            <hr>
+            <small class=" text-center">Measuring the carbon footprint of an aquaponic system involves assessing
+                all the components and activities that contribute to greenhouse gas emissions throughout the
+                system's lifecycle.
+                </small>
+                <!-- We take in the values for definite period of time and then calculate the emissions -->
+                <div class="form-group mt-4">
+                    <label for="kwh">Electric consumption (kWh)</label>
+                    <input step="100" type="number" class="form-control" name="kwh" id="kwh" value="{{.ElectricKwh}}"
+                        aria-describedby="kwhHelp" placeholder="Enter kWh consumption">
+                    <small class="text-primary">Total electrical consumption for the period of calculation</small>
+                </div>
+                <div class="form-group">
+                    <label for="feedkg">Fish feed (Kgs)</label>
+                    <input step="1" type="number" class="form-control" name="feedkg" id="feedkg"
+                        value="{{.FishFeedKgs}}" aria-describedby="feedkgHelp" placeholder="Fish food consumed">
+                    <small class="text-primary">Total fish food consumed for the period of calculation</small>
+                </div>
+                <div class="form-group">
+                    <label for="yeildkg">Plant yield (Kgs)</label>
+                    <input name="yeildkg" step="2" type="number" class="form-control" id="yeildkg"
+                        aria-describedby="yeildkgHelp" value="{{.PlantYeildKgs}}" placeholder="Kgs of food grown">
+                    <small class="text-primary">Total vegeterian food grown for the period of calculation</small>
+                </div>
+                <div class="form-group">
+                    <label for="fishkg">Fish yield (Kgs)</label>
+                    <input step="1" type="number" class="form-control" id="fishkg" name="fishkg"
+                        value="{{.FishYeildKgs}}" aria-describedby="fishkgHelp"
+                        placeholder="Approx weight of your fish">
+                    <small class="text-primary">Weight of the fish, some parts of the world the fish are regarded as
+                        food.</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp;emissions (kg)</label>
+                    <input class="form-control" type="number" placeholder="Change above values to calculate"
+                        disabled="" value="{{.Emissions}}" id="emissions" name="emissions">
+                    <small>Total emissions in kgs of Co2</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp; footprint / kg</label>
+                    <input class="form-control" type="number" placeholder="Change above values to calculate"
+                        disabled="" value="{{.Footprint}}" id="emissions" name="emissions">
+                        <small>Total emission in kgs per kg of produce</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+        </fieldset>
+    </form>
+</div>
+
+{{ end }}

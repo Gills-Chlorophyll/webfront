@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/eensymachines-in/utilities"
 )
 
 type TypOfIndexPage uint8
@@ -73,12 +74,14 @@ func init() {
 	}
 
 	AWS_S3 = s3.New(sess)
+
 }
 
 func main() {
 
 	// key := "tomato_farming.png"
-
+	defer utilities.SetUpLog()() // setsup the log and returns a close function to clean up
+	
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 
@@ -109,6 +112,11 @@ func main() {
 	r.GET("/dear-diary/:idx", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Blogs are a way we share our earned knowledge wit you."), BlogPageContent, PageDispatch("blog")) // blog page
 
 	r.GET("/gallery/", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "Gallery of all images from our site in Pune."), GalleryPageContent, PageDispatch("gallery"))
+
+	// Co2 foot print calculations
+	// getting the form - user then fills it up and sends it back for calculations
+	r.GET("/footprint", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "You can now estimate the Co2 foot print of the entire project."), FootprintCalcContent, PageDispatch("footprint"))
+	r.POST("/footprint", HndlPagePayload("Gills & Chlorophyll", "garden_farm.png", "Gills & Chlorophyll project", "You can now estimate the Co2 foot print of the entire project."), FootprintCalcContent, PageDispatch("footprint"))
 
 	log.Fatal(r.Run(":8080"))
 }

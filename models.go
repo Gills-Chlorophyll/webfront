@@ -10,6 +10,18 @@ import (
 type AnyResult interface {
 }
 
+// Co2FtPrintParams : this helps determine - or allows us to calculate the co2 footprint
+// annual emissions / yeild (fish + veggies)
+// the form submitted can bind to this data type
+type Co2FtPrintParams struct {
+	ElectricKwh   float32 `form:"kwh"`
+	FishFeedKgs   float32 `form:"feedkg"`
+	PlantYeildKgs float32 `form:"yeildkg"`
+	FishYeildKgs  float32 `form:"fishkg"`
+	Emissions     float32
+	Footprint     float32
+}
+
 type ResultOrErr struct {
 	Err    HttpErr
 	Result AnyResult

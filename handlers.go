@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 /* All the route handlers with specialized logic for each of the specialized routes */
@@ -104,4 +105,33 @@ func BlogPageContent(c *gin.Context) {
 
 func GalleryPageContent(c *gin.Context) {
 	c.Set("content", imageGallery)
+}
+
+func FootprintCalcContent(c *gin.Context) {
+	if c.Request.Method == "GET" {
+		c.Set("content", &Co2FtPrintParams{ElectricKwh: 0, FishFeedKgs: 0, PlantYeildKgs: 0, FishYeildKgs: 0, Emissions: 0, Footprint: 0})
+	} else if c.Request.Method == "POST" {
+		// do calculations and send across
+		// but for now we just send some dummy values
+		c.Request.ParseForm()
+		fmt.Println(c.Request.PostForm)
+		result := Co2FtPrintParams{}
+		if err := c.ShouldBind(&result); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"err": err,
+			}).Error("failed to bind form input tomodel")
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		logrus.WithFields(logrus.Fields{
+			"kwh":   result.ElectricKwh,
+			"feed":  result.FishFeedKgs,
+			"fish":  result.FishYeildKgs,
+			"plant": result.PlantYeildKgs,
+		}).Debug("received data from client")
+		result.Emissions = 0.5*result.ElectricKwh + 1.5*result.FishFeedKgs
+		result.Footprint = result.Emissions / (result.FishYeildKgs + result.PlantYeildKgs)
+		c.Set("content", &result)
+	}
+
 }
