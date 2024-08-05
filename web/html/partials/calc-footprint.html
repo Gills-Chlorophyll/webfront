@@ -54,18 +54,28 @@
                     <small class="text-primary">Weight of the fish, some parts of the world the fish are regarded as
                         food.</small>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp;emissions (kg)</label>
-                    <input class="form-control" type="number" placeholder="Change above values to calculate"
-                        disabled="" value="{{.Emissions}}" id="emissions" name="emissions">
-                    <small>Total emissions in kgs of Co2</small>
+                <div class="form-check">
+                    <label class="form-check-label border-light">
+                      <input class="form-check-input" type="checkbox" id="veg" name ="veg" {{ if eq .Vegeterian "on"}} checked {{end}}>
+                      I grow fish to use as food
+                    </label>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp; footprint / kg</label>
-                    <input class="form-control" type="number" placeholder="Change above values to calculate"
-                        disabled="" value="{{.Footprint}}" id="emissions" name="emissions">
-                        <small>Total emission in kgs per kg of produce</small>
-                </div>
+                
+                <section id="calculated mt-4">
+                    <hr>
+                    <div class="form-group">
+                        <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp;emissions (kg)</label>
+                        <input class="form-control" type="number" placeholder="Change above values to calculate"
+                            disabled="" value="{{.Emissions}}" id="emissions" name="emissions">
+                        <small>Total emissions in kgs of Co2</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="emissions">Co<sub>2</sub>&nbsp; footprint / kg</label>
+                        <input class="form-control" type="number" placeholder="Change above values to calculate"
+                            disabled="" value="{{.Footprint}}" id="emissions" name="emissions">
+                            <small>Total emission in kgs per kg of produce</small>
+                    </div>
+                </section>
                 <button type="submit" class="btn btn-primary">Calculate</button>
         </fieldset>
     </form>

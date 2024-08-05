@@ -107,9 +107,10 @@ func GalleryPageContent(c *gin.Context) {
 	c.Set("content", imageGallery)
 }
 
+// FootprintCalcContent : Handles form for Co2 emissions and footprint calculations.
 func FootprintCalcContent(c *gin.Context) {
 	if c.Request.Method == "GET" {
-		c.Set("content", &Co2FtPrintParams{ElectricKwh: 0, FishFeedKgs: 0, PlantYeildKgs: 0, FishYeildKgs: 0, Emissions: 0, Footprint: 0})
+		c.Set("content", &Co2FtPrintParams{Vegeterian: "off", ElectricKwh: 0, FishFeedKgs: 0, PlantYeildKgs: 0, FishYeildKgs: 0, Emissions: 0, Footprint: 0})
 	} else if c.Request.Method == "POST" {
 		// do calculations and send across
 		// but for now we just send some dummy values
@@ -120,7 +121,10 @@ func FootprintCalcContent(c *gin.Context) {
 			logrus.WithFields(logrus.Fields{
 				"err": err,
 			}).Error("failed to bind form input tomodel")
-			c.AbortWithStatus(http.StatusBadRequest)
+			// will send back the relevant page when error
+			c.HTML(http.StatusBadRequest, "400.html", gin.H{
+				"err_msg": "failed reading the inputs, this happens when one or more inputs you privided is invalidated",
+			})
 			return
 		}
 		logrus.WithFields(logrus.Fields{
@@ -128,9 +132,19 @@ func FootprintCalcContent(c *gin.Context) {
 			"feed":  result.FishFeedKgs,
 			"fish":  result.FishYeildKgs,
 			"plant": result.PlantYeildKgs,
-		}).Debug("received data from client")
+		}).Debug("form data..")
+		// First we get the emissions
+		// footprint is emissions per kg of yeild
+		// we have gotten this formula from chatgpt discussions
 		result.Emissions = 0.5*result.ElectricKwh + 1.5*result.FishFeedKgs
-		result.Footprint = result.Emissions / (result.FishYeildKgs + result.PlantYeildKgs)
+		// this can be calculated for vegeterian as well, in that case only the plant yeild is considered
+		if result.Vegeterian != "on" {
+			if result.PlantYeildKgs != 0 {
+				result.Footprint = result.Emissions / result.PlantYeildKgs
+			}
+		} else {
+			result.Footprint = result.Emissions / (result.FishYeildKgs + result.PlantYeildKgs)
+		}
 		c.Set("content", &result)
 	}
 

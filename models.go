@@ -18,6 +18,7 @@ type Co2FtPrintParams struct {
 	FishFeedKgs   float32 `form:"feedkg"`
 	PlantYeildKgs float32 `form:"yeildkg"`
 	FishYeildKgs  float32 `form:"fishkg"`
+	Vegeterian    string  `form:"veg"`
 	Emissions     float32
 	Footprint     float32
 }
