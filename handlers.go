@@ -141,6 +141,18 @@ func FootprintCalcContent(c *gin.Context) {
 		if result.Vegeterian != "on" {
 			if result.PlantYeildKgs != 0 {
 				result.Footprint = result.Emissions / result.PlantYeildKgs
+			} else {
+				// No yield would mean not footprint calcuations.
+				logrus.WithFields(logrus.Fields{
+					"kwh":   result.ElectricKwh,
+					"feed":  result.FishFeedKgs,
+					"fish":  result.FishYeildKgs,
+					"plant": result.PlantYeildKgs,
+				}).Error("Zero yield condition")
+				c.HTML(http.StatusBadRequest, "400.html", gin.H{
+					"err_msg": fmt.Sprintf("Without any yield cannot calculate footprint, Emissions stand to be %f Kgs of Co2", result.Emissions),
+				})
+				return
 			}
 		} else {
 			result.Footprint = result.Emissions / (result.FishYeildKgs + result.PlantYeildKgs)

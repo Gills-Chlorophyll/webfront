@@ -1,4 +1,10 @@
 {{ define "partials/calc-footprint.html" }}
+<!-- A simple form to calculate the emissions and carbonfoot print  
+takes about 4 imputs from the user 
+1. electric consumption in kwh 
+2. fish feed in kgs
+3. yeild of the evgetables
+4. yeild of the fish (if atall you treat fish as food)-->
 <style>
     .legend-image {
         max-width: 40%;
@@ -16,6 +22,7 @@
     <form action="/footprint" method="post">
         <fieldset>
             <div class="container d-flex" style="justify-content: space-between; align-items: end;">
+                <!-- Legend with image on the side -->
                 <img class="img-fluid legend-image align-self-center rounded-circle" 
                 src="{{ presignImgURL "green_earth.png"}} " alt="">
                 <div>
